@@ -11,12 +11,39 @@ def Action(grille, coord, player, win):
     if grille[x][y] == 0:
         grille[x][y] = player
 
+        print(grille[x][y-2], grille[x][y-1])
+
+        if grille[x-2][y] == player and grille[x-1][y] == player:
+            win = False
+        if grille[x-1][y] == player and grille[x+1][y] == player:
+            win = False
+        if grille[x+1][y] == player and grille[x+2][y] == player:
+            win = False
+        if grille[x][y-2] == player and grille[x][y-1] == player:
+            win = False
+        if grille[x][y-1] == player and grille[x][y+1] == player:
+            win = False
+        if grille[x][y+1] == player and grille[x][y+2] == player:
+            win = False
+
+        if grille[x-2][y-2] == player and grille[x-1][y-1] == player:
+            win = False
+        if grille[x-1][y-1] == player and grille[x+1][y+1] == player:
+            win = False
+        if grille[x+1][y+1] == player and grille[x+2][y+2] == player:
+            win = False
+        if grille[x+2][y-2] == player and grille[x+1][y-1] == player:
+            win = False
+        if grille[x+1][y-1] == player and grille[x-1][y+1] == player:
+            win = False
+        if grille[x-1][y+1] == player and grille[x-2][y+2] == player:
+            win = False
+        
         for i in range(5):
             for j in range(5):
                 if grille[i][j] == 0:
                     if not(x-2 <= i and i <= x+2) or not(y-2 <= j and j <= y+2):
                         grille[i][j] = 4
-                    
 
     return grille, win
 
