@@ -58,7 +58,9 @@ def Main():
     player = 2
     win = True
     Afficher(grille)
+    duree = 0
     while win:
+        duree += 1
         if player == 1:
             player = 2
         else:
@@ -68,5 +70,6 @@ def Main():
         Afficher(grille)
 
     print("Le joueur "+str(player)+" a gagné")
+    print("Durée : "+str(duree)+" tours")
 
 Main()
