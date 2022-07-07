@@ -26,14 +26,13 @@ class Cringe_Morpion:
             for i in self.joueurs:
                 i.score += -50
         else:
-            for i in self.joueurs:
-                if i != self.gagnant:
-                    perdant = i
+            gagnant = self.joueurs[self.gagnant]
+            perdant = self.joueurs[self.gagnant -1]
+            gagnant.Ajouter_score(100)
             perdant.Ajouter_score(-100)
-            self.gagnant.Ajouter_score(100)
-            print(self.gagnant.nom,"gagne son score est de",self.gagnant.score,"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print(gagnant.nom,"gagne son score est de",gagnant.score,"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
             print("duree:", self.duree)
-            print("score perdant:", perdant.score)
+            print("le score de", perdant.nom, "est de", perdant.score)
         self.Afficher()
 
     def Interface(self):
@@ -46,9 +45,26 @@ class Cringe_Morpion:
     def Entre(self,x):
         return (0 <= x) and (x < 5)
 
+    def Gagne(self, i, j, num):
+        # on vérifie si le joueur a gagné
+        if self.grille[i][j] == num:
+            if self.Entre(j+2):
+                if self.grille[i][j+2] == num and self.grille[i][j+1] == num:
+                    return True
+            if self.Entre(i+2):
+                if self.grille[i+2][j] == num and self.grille[i+1][j] == num:
+                    return True
+            if self.Entre(j+2) and self.Entre(i+2):
+                if self.grille[i+2][j+2] == num and self.grille[i+1][j+1] == num:
+                    return True
+            if self.Entre(j-2) and self.Entre(i+2):
+                if self.grille[i+2][j-2] == num and self.grille[i+1][j-1] == num:
+                    return True
     
     def Action(self, x, y):
         if self.grille[x][y] != 0:
+            #si la case est déjà occupée, le joueur perd 1 point
+            self.joueurs[self.jouant].Ajouter_score(-1)
             return
         self.grille[x][y] = self.joueurs[self.jouant].numero
         
@@ -56,34 +72,20 @@ class Cringe_Morpion:
         for i in range(5):
             for j in range(5):
                 if self.grille[i][j] == 0:
+                    # on indique les cases ou l'on ne peut plus jouer
                     if not(x-2 <= i and i <= x+2) or not(y-2 <= j and j <= y+2):
                         self.grille[i][j] = 4
                     case_vide_restante = True
                 
-                num = self.joueurs[self.jouant].numero
-                if self.grille[i][j] == num:
-                    if self.Entre(j+2):
-                        if self.grille[i][j+2] == num and self.grille[i][j+1] == num:
-                            self.gagnant = self.joueurs[self.jouant]
-                            return
-                    if self.Entre(i+2):
-                        if self.grille[i+2][j] == num and self.grille[i+1][j] == num:
-                            self.gagnant = self.joueurs[self.jouant]
-                            return
-                    if self.Entre(j+2) and self.Entre(x+2):
-                        if self.grille[i+2][j+2] == num and self.grille[i+1][j+1] == num:
-                            self.gagnant = self.joueurs[self.jouant]
-                            return
-                    if self.Entre(j-2) and self.Entre(x+2):
-                        if self.grille[i+2][j-2] == num and self.grille[i+1][j-1] == num:
-                            self.gagnant = self.joueurs[self.jouant]
-                            return
+                if self.Gagne(i, j, self.joueurs[self.jouant].numero):
+                    self.gagnant = self.jouant
+                    return
+                
 
         if not case_vide_restante:
             self.gagnant = "egalite"
     
     def Start(self):
-        self.Afficher()
         while self.gagnant == False:
             self.duree += 1
 
